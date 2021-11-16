@@ -3,8 +3,6 @@
 *@
 @{
 }
-@{
-}
 @using Microsoft.AspNetCore.Identity
 @using CVStorage.Areas.Identity.Data
 
@@ -19,7 +17,7 @@
 <div class="card-deck">
     @foreach (var person in Model)
     {
-        if (person.IsAccepted == true)
+        if (person.IsAccepted != true)
         {
             var photoPath = "~/images/" + (person.PhotoPath ?? "dummy.png");
             <div class="card m-3" style="min-width: 18rem; max-width:30.5%;">
@@ -33,6 +31,7 @@
                 <div class="card-footer text-center">
                     <a asp-controller="User" asp-action="Profile" asp-route-id="@person.ID"
                        class="btn btn-primary m-1">View</a>
+                    <a asp-controller="Admin" asp-action="AcceptUser" asp-route-id="@person.ID" class="btn btn-success">Accept</a>
                     @if (UserManager.GetUserId(User) == person.ID)
                     {
                         <a asp-controller="User" asp-action="Edit" asp-route-id="@person.ID"

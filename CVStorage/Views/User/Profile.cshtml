@@ -4,7 +4,11 @@
 @{
 }
 @model Person
+@using Microsoft.AspNetCore.Identity
+@using CVStorage.Areas.Identity.Data
 
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
 @{
     ViewBag.Title = "Profile";
@@ -33,14 +37,21 @@
                 <br />
                 <h4>Project : @Model.Project</h4>
                 <h4>Skills : @Model.Skills</h4>
-                
+
 
             </div>
             <div class="card-footer text-center">
+                
+                @if(User.IsInRole("Admin"))
+                {
+                    <a asp-controller="Admin" asp-action="AcceptUser" asp-route-id="@Model.ID" class="btn btn-success">Accept</a>
+                }
                 <a asp-controller="home" asp-action="index" class="btn btn-primary">Back</a>
-                <a asp-controller="User" asp-action="Edit" asp-route-id="@Model.ID"
-                   class="btn btn-primary m-1">Edit</a>
-                <a href="#" class="btn btn-danger">Delete</a>
+                @if(UserManager.GetUserId(User) == Model.ID)
+                {
+                    <a asp-controller="User" asp-action="Edit" asp-route-id="@Model.ID"
+                       class="btn btn-primary m-1">Edit</a>
+                }
             </div>
         </div>
     </div>
