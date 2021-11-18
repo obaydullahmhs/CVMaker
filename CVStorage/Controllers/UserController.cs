@@ -1,7 +1,9 @@
 ﻿using CVStorage.Models;
 using CVStorage.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using SelectPdf;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,17 +12,20 @@ using System.Threading.Tasks;
 
 namespace CVStorage.Controllers
 {
+    [Authorize]
     public class UserController : Controller
     {
         private readonly IPersonRepo _personRepository;
         [Obsolete]
         private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment env;
 
         [Obsolete]
-        public UserController(IPersonRepo personRepo, IHostingEnvironment hostingEnvironment)
+        public UserController(IPersonRepo personRepo, IHostingEnvironment hostingEnvironment, IWebHostEnvironment env)
         {
             _personRepository = personRepo;
             _hostingEnvironment = hostingEnvironment;
+            this.env = env;
         }
         public IActionResult AllUsers()
         {
@@ -94,6 +99,34 @@ namespace CVStorage.Controllers
             }
 
             return View(model);
+        }
+
+        public IActionResult DownloadCV(string ID)
+        {
+            Person person = _personRepository.GetPerson(ID);
+            HtmlToPdf htmlpdf = new HtmlToPdf();
+
+            string path = string.Empty;
+            path = System.IO.File.ReadAllText(env.WebRootPath + @"\pdfhtmlFile.html");
+
+            path = path.Replace("myName", person.Name)
+                .Replace("myEmail", person.Email)
+                .Replace("myPhone", person.Phone)
+                .Replace("myUniversity", person.University)
+                .Replace("mySubject", person.Subject)
+                .Replace("myCGPA", person.Bachelor_CGPA.ToString())
+                .Replace("mySSC", person.SSC_GPA.ToString())
+                .Replace("myHSC", person.HSC_GPA.ToString())
+                .Replace("myProject", person.Project)
+                .Replace("mySkill", person.Skills)
+                .Replace("myPhoto", env.WebRootPath + @"/images/"+ (person.PhotoPath ?? "dummy.png"))
+                .Replace("amiBUP", env.WebRootPath + @"/images/bup-logo.png");
+
+
+            PdfDocument doc = htmlpdf.ConvertHtmlString(path);
+            var bytes = doc.Save();
+            return File(bytes, "application/pdf", person.Name + ".pdf");
+
         }
 
         [Obsolete]

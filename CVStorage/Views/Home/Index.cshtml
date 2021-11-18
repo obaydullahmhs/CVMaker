@@ -2,7 +2,70 @@
     ViewData["Title"] = "Home Page";
 }
 
+
+
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
+    <h1 class="display-4">Welcome to BUP Jobs</h1>
     
+    <h2>
+        Developed By: BUP_Aerolite 3.2
+    </h2>
+
+    <div class="conmallu">
+        
+        <div class="first color">
+            <img src="~/images/Abu-Sayed.jpg" />
+            <p>Abu Sayed</p>
+        </div>
+        <div class="second color">
+            <img src="~/images/Obaydullah.jpg" />
+            <p>M Obaydullah</p>
+        </div>
+        <div class="third color">
+            <img src="~/images/Arnab.jpg" />
+            <p>Arnab Sheikh</p>
+        </div>
+    </div>
+
 </div>
+
+@section style{
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .conmallu {
+            width: 100%;
+            margin-top: 30px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-evenly;
+            align-content: center;
+        }
+
+        .color {
+            background-color: #cdffdb;
+            text-align: center;
+        }
+
+        h2 {
+            margin-top: 145px;
+        }
+
+        img {
+            height: 300px;
+            width: 300px;
+        }
+
+        p {
+            padding-top: 3px;
+            font-family: sans-serif;
+            font-size: 20px;
+            font-weight: 500;
+        }
+    </style>
+}
